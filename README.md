@@ -1,0 +1,1 @@
+# docker_atlassian_applications
