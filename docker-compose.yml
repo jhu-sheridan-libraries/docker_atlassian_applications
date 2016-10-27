@@ -1,20 +1,6 @@
 version: '2'
 services:
-    web:
-      image: nginx:latest
-      links:
-	- crowd
-   	- jira
-    db:
-      image: mysql:5.6
-      volumes:
-        - db:/var/lib/mysql/
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-
     crowd:
-      depends_on:
-        - db
       image: derekbelrose/crowd:2.10.1
       volumes:
         - crowd_logs:/opt/atlassian/crowd/apache-tomcat/logs
@@ -23,13 +9,10 @@ services:
         - "8095"
       expose:
         - "8095"
-      links:
-        - db
 
     jira:
       depends_on:
         - crowd
-        - db
       image: derekbelrose/jira:6.3.15
       volumes:
         - "jira_home:/var/atlassian/application-data/jira"
@@ -37,14 +20,23 @@ services:
       ports:
         - "8080"
       links:
-        - db
         - crowd
       environment:
         - JVM_SUPPORT_RECOMMENDED_ARGS="-Dfile.encoding=utf-8"
 
+    nginx:
+      depends_on:
+        - jira
+        - crowd
+      image: nginx
+      ports: ["80:80"]
+      volumes:
+        - "nginx_confd:/etc/nginx/conf.d"
+      links:
+        - crowd
+        - jira
+   
 volumes:
-  db:
-    external: false
   crowd_logs:
     external: false
   crowd_home:
@@ -52,4 +44,6 @@ volumes:
   jira_logs:
     external: false
   jira_home:
+    external: false
+  nginx_confd:
     external: false
