@@ -2,21 +2,40 @@ version: '2'
 services:
     crowd:
       image: derekbelrose/crowd:2.10.1
+      restart: always
       volumes:
         - crowd_logs:/opt/atlassian/crowd/apache-tomcat/logs
         - crowd_home:/var/atlassian/application-data/crowd
+        - crowd_tomcat_config:/opt/atlassian/crowd/apache-tomcat/conf
+
       ports:
         - "8095"
-      expose:
-        - "8095"
+
+    confluence:
+      depends_on:
+        - crowd
+      image: cptactionhank/atlassian-confluence:5.10.8
+      restart: always
+      volumes:
+        - "confluence_home:/var/atlassian/confluence"
+        - "confluence_logs:/opt/atlassian/confluence/logs"
+        - "confluence_tomcat_config:/opt/atlassian/confluence/conf"
+      ports:
+        - "8090"
+      links:
+        - crowd
+      environment:
+        - JVM_SUPPORT_RECOMMENDED_ARGS="-Dfile.encoding=utf-8"
 
     jira:
       depends_on:
         - crowd
-      image: derekbelrose/jira:6.3.15
+      image: cptactionhank/atlassian-jira:6.4.13
+      restart: always
       volumes:
-        - "jira_home:/var/atlassian/application-data/jira"
-        - "jira_logs:/opt/atlassian/jira/logs"
+        - "jira_home:/var/local/atlassian/jira"
+        - "jira_logs:/usr/local/atlassian/jira/logs"
+        - "jira_tomcat_config:/usr/local/atlassian/jira/conf"
       ports:
         - "8080"
       links:
@@ -26,24 +45,35 @@ services:
 
     nginx:
       depends_on:
-        - jira
         - crowd
       image: nginx
-      ports: ["80:80"]
+      restart: always
+      ports: ["80:80", "443:443"]
       volumes:
         - "nginx_confd:/etc/nginx/conf.d"
       links:
         - crowd
         - jira
+        - confluence
    
 volumes:
   crowd_logs:
     external: false
   crowd_home:
     external: false
+  crowd_tomcat_config:
+    external: false
   jira_logs:
     external: false
   jira_home:
+    external: false
+  jira_tomcat_config:
+    external: false
+  confluence_home:
+    external: false
+  confluence_logs:
+    external: false
+  confluence_tomcat_config:
     external: false
   nginx_confd:
     external: false
