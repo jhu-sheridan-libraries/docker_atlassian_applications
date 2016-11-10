@@ -30,12 +30,12 @@ services:
     jira:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-jira:6.4.13
+      image: cptactionhank/atlassian-jira:7.2.4
       restart: always
       volumes:
-        - "jira_home:/var/local/atlassian/jira"
-        - "jira_logs:/usr/local/atlassian/jira/logs"
-        - "jira_tomcat_config:/usr/local/atlassian/jira/conf"
+        - "jira_home:/var/atlassian/jira"
+        - "jira_logs:/opt/atlassian/jira/logs"
+        - "jira_tomcat_config:/opt/atlassian/jira/conf"
       ports:
         - "8080"
       links:
