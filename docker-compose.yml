@@ -14,7 +14,7 @@ services:
     confluence:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-confluence:6.1.1
+      image: cptactionhank/atlassian-confluence:6.3.3
       restart: always
       volumes:
         - "confluence_home:/var/atlassian/confluence"
@@ -30,7 +30,7 @@ services:
     jira:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-jira:7.3.4
+      image: cptactionhank/atlassian-jira:7.4.2
       restart: always
       volumes:
         - "jira_home:/var/atlassian/jira"
