@@ -2,7 +2,6 @@ version: '2'
 services:
     crowd:
       image: derekbelrose/crowd:2.10.1
-      restart: always
       volumes:
         - crowd_logs:/opt/atlassian/crowd/apache-tomcat/logs
         - crowd_home:/var/atlassian/application-data/crowd
@@ -15,7 +14,6 @@ services:
       depends_on:
         - crowd
       image: cptactionhank/atlassian-confluence:6.3.3
-      restart: always
       volumes:
         - "confluence_home:/var/atlassian/confluence"
         - "confluence_logs:/opt/atlassian/confluence/logs"
@@ -31,7 +29,6 @@ services:
       depends_on:
         - crowd
       image: cptactionhank/atlassian-jira:7.4.2
-      restart: always
       volumes:
         - "jira_home:/var/atlassian/jira"
         - "jira_logs:/opt/atlassian/jira/logs"
@@ -47,7 +44,6 @@ services:
       depends_on:
         - crowd
       image: nginx
-      restart: always
       ports: ["80:80", "443:443"]
       volumes:
         - "nginx_confd:/etc/nginx/conf.d"
