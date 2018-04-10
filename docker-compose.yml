@@ -1,7 +1,7 @@
 version: '2'
 services:
     crowd:
-      image: derekbelrose/crowd:2.10.1
+      image: derekbelrose/crowd:3.1.2
       volumes:
         - "/usr/local/atlassian-docker/logs/crowd:/opt/atlassian/crowd/apache-tomcat/logs"
         - "/usr/local/atlassian-docker/crowd/var/atlassian/application-data/crowd:/var/atlassian/application-data/crowd"
@@ -13,7 +13,7 @@ services:
     confluence:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-confluence:6.3.4
+      image: cptactionhank/atlassian-confluence:6.8.1
       volumes:
         - "/usr/local/atlassian-docker/confluence/var/atlassian/confluence:/var/atlassian/confluence"
         - "/usr/local/atlassian-docker/logs/confluence:/opt/atlassian/confluence/logs"
@@ -28,7 +28,7 @@ services:
     jira:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-jira:7.6.3
+      image: cptactionhank/atlassian-jira:7.9.0
       volumes:
         - "/usr/local/atlassian-docker/jira/var/atlassian/jira:/var/atlassian/jira"
         - "/usr/local/atlassian-docker/logs/jira:/opt/atlassian/jira/logs"
