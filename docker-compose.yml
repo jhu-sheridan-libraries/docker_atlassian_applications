@@ -3,9 +3,9 @@ services:
     crowd:
       image: derekbelrose/crowd:2.10.1
       volumes:
-        - crowd_logs:/opt/atlassian/crowd/apache-tomcat/logs
-        - crowd_home:/var/atlassian/application-data/crowd
-        - crowd_tomcat_config:/opt/atlassian/crowd/apache-tomcat/conf
+        - "/usr/local/atlassian-docker/logs/crowd:/opt/atlassian/crowd/apache-tomcat/logs"
+        - "/usr/local/atlassian-docker/crowd/var/atlassian/application-data/crowd:/var/atlassian/application-data/crowd"
+        - "/usr/local/atlassian-docker/crowd/opt/atlassian/crowd/apache-tomcat/conf:/opt/atlassian/crowd/apache-tomcat/conf"
 
       ports:
         - "8095"
@@ -13,11 +13,11 @@ services:
     confluence:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-confluence:6.3.3
+      image: cptactionhank/atlassian-confluence:6.3.4
       volumes:
-        - "confluence_home:/var/atlassian/confluence"
-        - "confluence_logs:/opt/atlassian/confluence/logs"
-        - "confluence_tomcat_config:/opt/atlassian/confluence/conf"
+        - "/usr/local/atlassian-docker/confluence/var/atlassian/confluence:/var/atlassian/confluence"
+        - "/usr/local/atlassian-docker/logs/confluence:/opt/atlassian/confluence/logs"
+        - "/usr/local/atlassian-docker/confluence/opt/atlassian/confluence/conf:/opt/atlassian/confluence/conf"
       ports:
         - "8090"
       links:
@@ -28,11 +28,11 @@ services:
     jira:
       depends_on:
         - crowd
-      image: cptactionhank/atlassian-jira:7.4.2
+      image: cptactionhank/atlassian-jira:7.6.3
       volumes:
-        - "jira_home:/var/atlassian/jira"
-        - "jira_logs:/opt/atlassian/jira/logs"
-        - "jira_tomcat_config:/opt/atlassian/jira/conf"
+        - "/usr/local/atlassian-docker/jira/var/atlassian/jira:/var/atlassian/jira"
+        - "/usr/local/atlassian-docker/logs/jira:/opt/atlassian/jira/logs"
+        - "/usr/local/atlassian-docker/jira/opt/atlassian/jira/conf:/opt/atlassian/jira/conf"
       ports:
         - "8080"
       links:
@@ -46,30 +46,8 @@ services:
       image: nginx
       ports: ["80:80", "443:443"]
       volumes:
-        - "nginx_confd:/etc/nginx/conf.d"
+        - "/usr/local/atlassian-docker/nginx/etc/nginx/conf.d:/etc/nginx/conf.d"
       links:
         - crowd
         - jira
         - confluence
-   
-volumes:
-  crowd_logs:
-    external: false
-  crowd_home:
-    external: false
-  crowd_tomcat_config:
-    external: false
-  jira_logs:
-    external: false
-  jira_home:
-    external: false
-  jira_tomcat_config:
-    external: false
-  confluence_home:
-    external: false
-  confluence_logs:
-    external: false
-  confluence_tomcat_config:
-    external: false
-  nginx_confd:
-    external: false
